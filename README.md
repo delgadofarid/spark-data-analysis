@@ -1,12 +1,17 @@
-# movies-recommender
+# Spark Data Analysis
 
-This project contains examples of applications in Spark + illustrate a way of doing movie recommendations based on collaborative user feedback and using only Spark.
+This project contains examples of applications in Spark, plus it includes a script showcasing a way of doing movie recommendations using item-based collaborative filtering with Spark.
 
 ## Project structure
 
 ```bash
-examples/       # folder with python scripts used as examples
-recommender/    # contains python scripts for doing movie recommendation
+examples/                       # folder with python scripts used as examples
+├── generate-data.py            # script to generate sample data required by all the examples scripts under this folder
+├── order-analysis-rdd.py       # script to generate insights from sample data using RDDs
+├── order-analysis-sql.py       # script to generate insights from sample data using SQL (DataFrames)
+
+recommender/                    # contains python scripts for doing movie recommendation
+├── movies-recommendation.py    # script containing logic to recommend movies using item-based collaborative filtering with Spark
 ```
 
 ## Requirements
