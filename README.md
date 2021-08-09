@@ -39,7 +39,7 @@ recommender/                    # contains python scripts for doing movie recomm
     $ xcode-select –install
     ```
    
-    Another alternative is to simply download and install the version of `Command Line Tools` that we need: this can be done manually from the [Apple Developer Portal / More Downloads] (https://developer.apple.com/download/all/? q = xcode).
+    Another alternative is to simply download and install the version of `Command Line Tools` that we need: this can be done manually from the [Apple Developer Portal / More Downloads](https://developer.apple.com/download/all/?q=xcode).
 
 
 
