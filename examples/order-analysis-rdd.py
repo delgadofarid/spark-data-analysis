@@ -80,5 +80,5 @@ print("\ntop 10 clientes con más ordenes - SIN FORMATO:")
 print(topCustomersByNumOrders)
 
 print("\ntop 10 clientes con más valor invertido - CON FORMATO:")
-for pos, result in enumerate(topCustomersByTotalValue):
-    print(f"{pos + 1}. {result[1]}: ${result[0]:.2f}")
+for pos, result in enumerate(topCustomersByTotalValue, start=1):
+    print(f"{pos}. {result[1]}: ${result[0]:.2f}")

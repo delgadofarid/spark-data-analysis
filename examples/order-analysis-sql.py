@@ -62,8 +62,8 @@ print("\ntop 10 clientes con más ordenes - SIN FORMATO:")
 print(topCustomersByNumOrders)
 
 print("\ntop 10 clientes con más valor invertido - CON FORMATO:")
-for pos, row in enumerate(topCustomersByNumOrders):
-    print(f"{pos + 1}. {row.customerName}: ${row.totalValue:.2f}")
+for pos, row in enumerate(topCustomersByNumOrders, start=1):
+    print(f"{pos}. {row.customerName}: ${row.totalValue:.2f}")
 
 # eliminamos session
 spark.stop()
