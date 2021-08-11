@@ -1,7 +1,11 @@
 # --------------------------- EJEMPLO ---------------------------
-# - Calcular total número de ordenes por cliente e identificar 
+# Dado los datasets `customer-orders.csv` y `customer-names.csv`
+# calcular:
+#
+# - Total número de ordenes por cliente e identificar 
 #   top 10 clientes con más ordenes
-# - Calcular valor total de ordenes por cliente e identificar 
+#
+# - Valor total de ordenes por cliente e identificar 
 #   top 10 clientes con mayor valor invertido
 # ---------------------------------------------------------------
 
