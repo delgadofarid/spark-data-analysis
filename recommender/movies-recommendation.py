@@ -10,7 +10,8 @@
 #
 # Pasos:
 # 1. Descargar y descomprimir el conjunto de datos
-# 2. Entender el formato de los datos
+# 2. Entender el formato de los datos en `ratings.csv` y 
+#    `movies.csv`
 # 3. Leer archivos (inferir schema) en dos dataframes, uno para 
 #    las calificaciones (`ratings.csv`) y otro para las 
 #    películas (`movies.csv`)
