@@ -1,7 +1,7 @@
 # -------------------------- EJERCICIO --------------------------
-# Crear motor de recomendaciones de películas similares a partir 
-# de un conjunto de datos de calificaciones de películas 
-# (ratings) en https://grouplens.org/datasets/movielens/
+# Crear motor de recomendaciones de películas usando un conjunto 
+# de datos de calificaciones (ratings) realizadas por usuarios a 
+# películas disponible en https://grouplens.org/datasets/movielens/
 #
 # Nombre del conjunto de datos: MovieLens Latest Datasets - Small
 #
@@ -12,24 +12,41 @@
 # 1. Descargar y descomprimir el conjunto de datos
 # 2. Entender el formato de los datos
 # 3. Leer archivos (inferir schema) en dos dataframes, uno para 
-#    ratings y otro para movies
+#    las calificaciones (`ratings.csv`) y otro para las 
+#    películas (`movies.csv`)
 # 4. Construye un nuevo dataframe con todos los pares 
 #    de película vistas por usuario: para esto realizar 
-#    self-join del dataframe de ratings, eliminando 
-#    duplicados, y manteniendo ambos, id y rating de ambas
-#    películas
-# 5. Agrupar dataframe con los pares de peliculas, por
-#    las columnas de IDs, calcular cosine similarity con
-#    los valores de ratings agrupados y también contar
-#    el número de pares del mismo en cada grupo
+#    self-join del dataframe de calificaciones (ratings) 
+#    por el campo `userId` y asegurandose que no existan 
+#    duplicados del mismo par de películas. 
 #    
+#    El nuevo dataset debe contener movieId y rating de 
+#    ambas películas:
+#
 #    eg. [
+#       (userId1, movieId1, movieId2, rating1=5.0, rating2=5.0),
+#       (userId2, movieId1, movieId2, rating1=1.0, rating2=5.0),
+#       (userId3, movieId1, movieId2, rating1=3.0, rating2=5.0),
+#       ...
+#    ]
+# 5. Agrupar dataframe por pares de IDs de películas,
+#    y calcular cosine similarity con los valores de 
+#    calificaciones (ratings) agrupados. Al mismo tiempo, 
+#    mantener el conteo del número de filas agrupadas 
+#    por grupo
+#   
+#    eg. Agrupando las filas con movieId1 y movieId2:
+#    // ignoramos el userId
+#    [
 #       (movieId1, movieId2, rating1=5.0, rating2=5.0),
 #       (movieId1, movieId2, rating1=1.0, rating2=5.0),
 #       (movieId1, movieId2, rating1=3.0, rating2=5.0),
 #       ...
 #    ]
 #   
+#   A = [5.0, 1.0, 3.0]
+#   B = [5.0, 5.0, 5.0]
+#
 #   numeroPares = 3
 #   simcosNumerador = (5.0 * 5.0) + (1.0 * 5.0) + (3.0 * 5.0)
 #   simcosDenominador = sqrt((5.0 * 5.0) + (1.0 * 1.0) + (3.0 * 3.0)) * sqrt((5.0 * 5.0) + (5.0 * 5.0) + (5.0 * 5.0))
@@ -39,7 +56,6 @@
 #       (movieId1, movieId2, simcos = 0.87, numeroPares = 3),
 #       ...
 #   ]
-#   
 # 6. Crear programa que reciba como input el ID de la pelicula
 #    y devuelva al usuario el top 10 usando el dataframe creado
 #    en el paso anterior
