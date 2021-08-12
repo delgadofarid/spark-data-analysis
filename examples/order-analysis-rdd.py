@@ -19,9 +19,9 @@ sc = SparkContext(conf = conf)
 # función para formatear cada línea de texto en nuestro conjunto de datos
 def parseLine(line):
     """Convierte cada línea de texto a una Tupla
-    conteniendo solo el ID del cliente, una unidad 
-    (útil para conteo de número de ordenes) y el
-    valor de la orden
+    conteniendo solo el ID del cliente, Tupla 
+    compuesta de una unidad (útil para conteo de 
+    número de ordenes) y el valor de la orden
     
     ejemplo:
         76,2487,25.79  -> (76, (1, 25.79))
@@ -33,8 +33,8 @@ def parseLine(line):
     return (int(fields[0]), (1, float(fields[2])))
 
 # lectura de conjunto de datos a un RDD
-ordersInput = sc.textFile("file:///Users/u6104617/Desktop/misc/MinTic/bigdata_with_spark/lab/spark-data-analysis/examples/customer-orders.csv")
-namesInput = sc.textFile("file:///Users/u6104617/Desktop/misc/MinTic/bigdata_with_spark/lab/spark-data-analysis/examples/customer-names.csv")
+ordersInput = sc.textFile("file:///path/to/customer-orders.csv")
+namesInput = sc.textFile("ile:///path/to//customer-names.csv")
 
 # mapeo de líneas en nuestro RDD de ordenes a una nueva estructura -> (id_cliente, (1, valor_orden))
 mappedOrdersInput = ordersInput.map(parseLine)
@@ -74,7 +74,7 @@ numOrdersByCustomerSorted = numOrdersByCustomer.sortByKey(ascending=False)
 # el valor total de todas las ordenes del cliente
 # eg. ((2, 85.70), "Kris Connie") -> (85.70, "Kris Connie")
 totalValueByCustomerSorted = totalByCustomerWithNames.map(lambda x: (x[0][1], x[1]))\
-                                            .sortByKey(ascending=False)
+                                                     .sortByKey(ascending=False)
 
 # tomamos los primeros 10 resultados de cada RDD
 topCustomersByNumOrders = numOrdersByCustomerSorted.take(10)

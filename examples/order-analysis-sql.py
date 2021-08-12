@@ -38,15 +38,17 @@ customers = spark.read.schema(customerSchema).csv("file:///path/to/customer-name
 # agrupamos por la columna `customerId`
 # usamos dos funciones de aggregacion sobre la misma 
 # columna `value` para crear dos nuevas columnas con:
-# - orderCount: F.count("value") cuenta de todos los elementos agrupados
-# - totalValue: F.sum("value") suma de todos los valores agrupados en la columna `value` 
+# - orderCount: COUNT("value") cuenta de todos los elementos agrupados
+# - totalValue: SUM("value") suma de todos los valores agrupados en la columna `value` 
 
 # con SQL:
 orders.createOrReplaceTempView("orders")
 totalByCustomer = spark.sql("SELECT customerId, COUNT(value) AS orderCount, SUM(value) AS totalValue "
                             "FROM orders GROUP BY customerId")
 
-# # con funciones (functional programming):
+# con funciones (functional programming):
+# - orderCount: F.count("value") cuenta de todos los elementos agrupados
+# - totalValue: F.sum("value") suma de todos los valores agrupados en la columna `value` 
 # totalByCustomer = orders.groupBy("customerId")\
 #                         .agg(F.count("value").alias("orderCount"), 
 #                              F.sum("value").alias("totalValue"))
