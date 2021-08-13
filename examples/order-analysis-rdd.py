@@ -33,14 +33,14 @@ def parseLine(line):
     return (int(fields[0]), (1, float(fields[2])))
 
 # lectura de conjunto de datos a un RDD
-ordersInput = sc.textFile("file:///path/to/customer-orders.csv")
-namesInput = sc.textFile("ile:///path/to//customer-names.csv")
+ordersRDD = sc.textFile("file:///path/to/customer-orders.csv")
+namesRDD = sc.textFile("file:///path/to//customer-names.csv")
 
 # mapeo de líneas en nuestro RDD de ordenes a una nueva estructura -> (id_cliente, (1, valor_orden))
-mappedOrdersInput = ordersInput.map(parseLine)
+mappedOrders = ordersRDD.map(parseLine)
 
 # agrupamos por llave, que en nuestro caso sería el primer elemento 
-# de cada tupla en `mappedOrdersInput` (ID del cliente)
+# de cada tupla en `mappedOrders` (ID del cliente)
 #
 # Ejemplo:
 # Tupla_1: (10, (1, 20.50))
@@ -50,11 +50,11 @@ mappedOrdersInput = ordersInput.map(parseLine)
 # Tupla_final: Result: (2, 85.70)
 # reduceByKey assigna tupla de vuelta al correspondiente ID del cliente: 
 # eg. (10, (2, 85.70))
-totalByCustomer = mappedOrdersInput.reduceByKey(lambda x, y: (x[0] + y[0], x[1] + y[1]))
+totalByCustomer = mappedOrders.reduceByKey(lambda x, y: (x[0] + y[0], x[1] + y[1]))
 
 # mapeo de líneas en nuestro RDD de nombres a una nueva estructura: (id_cliente, nombre_cliente)
 # eg. (10, "Kris Connie")
-customerNames = namesInput.map(lambda x: (int(x.split(",")[0]), x.split(",")[1]))
+customerNames = namesRDD.map(lambda x: (int(x.split(",")[0]), x.split(",")[1]))
 
 # unimos (join) totalByCustomer con customerNames:
 # eg. (10, ((2, 85.70), "Kris Connie"))
