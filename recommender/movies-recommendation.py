@@ -39,9 +39,9 @@
 #    eg. Agrupando las filas con movieId1 y movieId2:
 #    // ignoramos el userId
 #    [
-#       (movieId1, movieId2, rating1=5.0, rating2=5.0),
-#       (movieId1, movieId2, rating1=1.0, rating2=5.0),
-#       (movieId1, movieId2, rating1=3.0, rating2=5.0),
+#       (movieId1=100, movieId2=200, rating1=5.0, rating2=5.0),
+#       (movieId1=100, movieId2=200, rating1=1.0, rating2=5.0),
+#       (movieId1=100, movieId2=200, rating1=3.0, rating2=5.0),
 #       ...
 #    ]
 #   
@@ -54,7 +54,7 @@
 #   simcos = simcosNumerador / simcosDenominador
 #   
 #   nuevo dataframe: [
-#       (movieId1, movieId2, simcos = 0.87, numeroPares = 3),
+#       (movieId1=100, movieId2=200, simcos = 0.87, numeroPares = 3),
 #       ...
 #   ]
 # 6. Crear programa que reciba como input el ID de la pelicula
@@ -67,3 +67,22 @@
 #    fin de mostrar resultados en los que se tenga un
 #    grado "decente" de confianza
 # ---------------------------------------------------------------
+
+from pyspark.sql import SparkSession
+import pyspark.sql.functions as F
+
+spark = SparkSession.builder.appName("MoviesRecommender").master("local[*]").getOrCreate()
+
+# TODO: Crear base de datos de películas similares
+
+import sys
+if len(sys.argv) > 1:
+
+    movieId = int(sys.argv[1])
+
+    # TODO:
+    # 1. Buscar en base de datos de películas similares a `movieId`
+    # 2. Mostrar el top X ordenados por relevancia
+
+
+spark.stop()
