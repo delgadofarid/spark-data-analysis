@@ -73,6 +73,8 @@ import pyspark.sql.functions as F
 
 spark = SparkSession.builder.appName("MoviesRecommender").master("local[*]").getOrCreate()
 
+# TODO: Lectura de conjutos de datos
+
 # TODO: Crear base de datos de películas similares
 
 import sys
