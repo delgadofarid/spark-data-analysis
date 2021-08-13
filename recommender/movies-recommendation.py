@@ -82,7 +82,7 @@ if len(sys.argv) > 1:
 
     # TODO:
     # 1. Buscar en base de datos de películas similares a `movieId`
-    # 2. Mostrar el top X ordenados por relevancia
+    # 2. Mostrar el top 10 de peliculas más parecidas ordenadas por relevancia
 
 
 spark.stop()
