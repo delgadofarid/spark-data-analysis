@@ -33,8 +33,8 @@ def parseLine(line):
     return (int(fields[0]), (1, float(fields[2])))
 
 # lectura de conjunto de datos a un RDD
-ordersRDD = sc.textFile("file:///path/to/customer-orders.csv")
-namesRDD = sc.textFile("file:///path/to//customer-names.csv")
+ordersRDD = sc.textFile("file:///Users/u6104617/Desktop/misc/MinTic/bigdata_with_spark/lab/spark-data-analysis/examples/customer-orders.csv")
+namesRDD = sc.textFile("file:///Users/u6104617/Desktop/misc/MinTic/bigdata_with_spark/lab/spark-data-analysis/examples/customer-names.csv")
 
 # mapeo de líneas en nuestro RDD de ordenes a una nueva estructura -> (id_cliente, (1, valor_orden))
 mappedOrders = ordersRDD.map(parseLine)
@@ -52,6 +52,8 @@ mappedOrders = ordersRDD.map(parseLine)
 # eg. (10, (2, 85.70))
 totalByCustomer = mappedOrders.reduceByKey(lambda x, y: (x[0] + y[0], x[1] + y[1]))
 
+# print(f"After reduceByKey:\n{totalByCustomer.take(10)}")
+
 # mapeo de líneas en nuestro RDD de nombres a una nueva estructura: (id_cliente, nombre_cliente)
 # eg. (10, "Kris Connie")
 customerNames = namesRDD.map(lambda x: (int(x.split(",")[0]), x.split(",")[1]))
@@ -59,6 +61,8 @@ customerNames = namesRDD.map(lambda x: (int(x.split(",")[0]), x.split(",")[1]))
 # unimos (join) totalByCustomer con customerNames:
 # eg. (10, ((2, 85.70), "Kris Connie"))
 totalByCustomerNamesJoined = totalByCustomer.join(customerNames)
+
+# print(f"After join:\n{totalByCustomerNamesJoined.take(10)}")
 
 # mantenemos solo el nombre del cliente y la tupla de valores de interés
 # eg. (10, ((2, 85.70), "Kris Connie")) -> ((2, 85.70), "Kris Connie")

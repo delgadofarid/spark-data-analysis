@@ -75,16 +75,78 @@ spark = SparkSession.builder.appName("MoviesRecommender").master("local[*]").get
 
 # TODO: Lectura de conjutos de datos
 
+movies = spark.read.option("header", "true").option("inferSchema", "true").csv("file:///Users/u6104617/Desktop/misc/MinTic/bigdata_with_spark/lab/ml-latest-small/movies.csv")
+
+movieNames = {row.movieId: row.title for row in movies.collect()}
+
+ratings = spark.read.option("header", "true").option("inferSchema", "true").csv("file:///Users/u6104617/Desktop/misc/MinTic/bigdata_with_spark/lab/ml-latest-small/ratings.csv")
+
 # TODO: Crear base de datos de películas similares
+
+# Despues del Self-Join:
+# user1, movie1, movie1
+# user1, movie2, movie2
+# user1, movie2, movie1
+# user1, movie1, movie2  # solo nos quedamos con uno
+
+print(f"Antes del self-join: {ratings.count()}")
+
+moviePairs = ratings.alias("r1")\
+    .join(ratings.alias("r2"), 
+          (F.col("r1.userId") == F.col("r2.userId")) & 
+          (F.col("r1.movieId") < F.col("r2.movieId")))
+
+print(f"Despues del self-join: {moviePairs.count()}")
+
+moviePairs = moviePairs.select(
+    F.col("r1.movieId").alias("movieId1"),
+    F.col("r2.movieId").alias("movieId2"),
+    F.col("r1.rating").alias("rating1"),
+    F.col("r2.rating").alias("rating2")
+)
+
+moviePairsWithMetrics = moviePairs\
+    .withColumn("A^2", F.pow("rating1", F.lit(2)))\
+    .withColumn("B^2", F.pow("rating2", F.lit(2)))\
+    .withColumn("A*B", F.col("rating1") * F.col("rating2"))
+
+similarityDatabase = moviePairsWithMetrics\
+    .groupBy("movieId1", "movieId2")\
+    .agg(
+        F.sum("A*B").alias("numerator"),
+        (F.sqrt(F.sum("A^2")) * F.sqrt(F.sum("B^2"))).alias("denominator"),
+        F.count("A*B").alias("userCount")
+    )
+
+similarityDatabase = similarityDatabase\
+    .withColumn("cosSim", 
+                F.when(F.col("denominator") != 0, F.col("numerator") / F.col("denominator"))\
+                 .otherwise(F.lit(0)))\
+    .select("movieId1", "movieId2", "cosSim", "userCount")\
+    .cache()
 
 import sys
 if len(sys.argv) > 1:
 
     movieId = int(sys.argv[1])
+    MIN_USER_NUM = 50
 
     # TODO:
     # 1. Buscar en base de datos de películas similares a `movieId`
+
+    foundMovies = similarityDatabase\
+        .filter(((F.col("movieId1") == movieId) | (F.col("movieId2") == movieId)) &
+                (F.col("userCount") >= MIN_USER_NUM))\
+        .sort(F.desc("cosSim"))\
+        .take(10)
+        
     # 2. Mostrar el top 10 de peliculas más parecidas ordenadas por relevancia
 
+    for pos, row in enumerate(foundMovies, 1):
+
+        similarMovieId = row.movieId1 if row.movieId1 != movieId \
+                                      else row.movieId2
+
+        print(f"{pos}. {movieNames[similarMovieId]}\t\tSimilitud: {row.cosSim} - NumUsuarios: {row.userCount}")
 
 spark.stop()

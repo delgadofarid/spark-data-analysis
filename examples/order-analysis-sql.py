@@ -32,8 +32,8 @@ customerSchema = StructType([
 
 
 # lectura de conjunto de datos a un Dataframe
-ordersDF = spark.read.schema(orderSchema).csv("file:///path/to/customer-orders.csv")
-customersDF = spark.read.schema(customerSchema).csv("file:///path/to/customer-names.csv")
+ordersDF = spark.read.schema(orderSchema).csv("file:///Users/u6104617/Desktop/misc/MinTic/bigdata_with_spark/lab/spark-data-analysis/examples/customer-orders.csv")
+customersDF = spark.read.schema(customerSchema).csv("file:///Users/u6104617/Desktop/misc/MinTic/bigdata_with_spark/lab/spark-data-analysis/examples/customer-names.csv")
 
 # agrupamos por la columna `customerId`
 # usamos dos funciones de aggregacion sobre la misma 
@@ -42,16 +42,16 @@ customersDF = spark.read.schema(customerSchema).csv("file:///path/to/customer-na
 # - totalValue: SUM("value") suma de todos los valores agrupados en la columna `value` 
 
 # con SQL:
-ordersDF.createOrReplaceTempView("orders")
-totalByCustomer = spark.sql("SELECT customerId, COUNT(value) AS orderCount, SUM(value) AS totalValue "
-                            "FROM orders GROUP BY customerId")
+# ordersDF.createOrReplaceTempView("orders")
+# totalByCustomer = spark.sql("SELECT customerId, COUNT(value) AS orderCount, SUM(value) AS totalValue "
+#                             "FROM orders GROUP BY customerId")
 
 # con funciones (functional programming):
 # - orderCount: F.count("value") cuenta de todos los elementos agrupados
 # - totalValue: F.sum("value") suma de todos los valores agrupados en la columna `value` 
-# totalByCustomer = ordersDF.groupBy("customerId")\
-#                           .agg(F.count("value").alias("orderCount"), 
-#                                F.sum("value").alias("totalValue"))
+totalByCustomer = ordersDF.groupBy("customerId")\
+                          .agg(F.count("value").alias("orderCount"), 
+                               F.sum("value").alias("totalValue"))
 
 
 # agregamos columna con el nombre del cliente
